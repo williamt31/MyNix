@@ -1,7 +1,11 @@
 #!/bin/bash
 # Created by: williamt31
 # Created on: 20221216
-# Version: 1.0
+# Version: 1.1
+
+if [[ -f "~/.tmux.conf" ]]; then
+    tmux source ~/.tmux.conf
+fi
 
 menu(){
 echo -ne "
@@ -16,6 +20,7 @@ echo -ne "
 \t22) 2 Vertical & 2 Horizontal Panes
 \t23) 2 Vertical & 3 Horizontal Panes
 \t24) 2 Vertical & 4 Horizontal Panes
+\t32) 3 Vertical & 2 Horizontal Panes
 \t33) 3 Vertical & 3 Horizontal Panes
 \t q) Quit
 \t########################################
@@ -65,7 +70,7 @@ case "$a" in
             tmux attach-session -t $SESSION
         ;;
         
-        22) SESSION="2Hor_2Ver"
+        22) SESSION="2Ver_2Hor"
             tmux new-session -d -s $SESSION
             tmux split-window -v -t $SESSION:0.0 -p 50
             tmux split-window -h -t $SESSION:0.0 -p 50
@@ -73,7 +78,7 @@ case "$a" in
             tmux attach-session -t $SESSION
         ;;
         
-        23) SESSION="3Hor_2Ver"
+        23) SESSION="2Ver_3Hor"
             tmux new-session -d -s $SESSION
             tmux split-window -h -t $SESSION:0.0 -p 50
             tmux split-window -v -t $SESSION:0.0 -p 33
@@ -83,7 +88,7 @@ case "$a" in
             tmux attach-session -t $SESSION
         ;;
         
-        24) SESSION="4Hor_2Ver"
+        24) SESSION="2Ver_4Hor"
             tmux new-session -d -s $SESSION
             tmux split-window -h -t $SESSION:0.0 -p 50
             tmux split-window -v -t $SESSION:0.0 -p 50
@@ -95,7 +100,18 @@ case "$a" in
             tmux attach-session -t $SESSION
         ;;
         
-        33) SESSION="3Hor_3Ver"
+        
+        32) SESSION="3Ver_2Hor"
+            tmux new-session -d -s $SESSION
+            tmux split-window -h -t $SESSION:0.0 -p 33
+            tmux split-window -h -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.1 -p 50
+            tmux split-window -v -t $SESSION:0.2 -p 50
+            tmux attach-session -t $SESSION
+        ;;
+        
+        33) SESSION="3Ver_3Hor"
             tmux new-session -d -s $SESSION
             tmux split-window -h -t $SESSION:0.0 -p 33
             tmux split-window -h -t $SESSION:0.0 -p 50

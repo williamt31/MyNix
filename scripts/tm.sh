@@ -1,10 +1,10 @@
 #!/bin/bash
 # Created by: williamt31
 # Created on: 20221216
-# Version: 1.1
+# Version: 1.2
 
-if [[ -f "~/.tmux.conf" ]]; then
-    tmux source ~/.tmux.conf
+if [[ ! -f ~/.tmux.conf ]]; then
+    ln -s "<network share>" ~/.tmux.conf
 fi
 
 menu(){
@@ -22,6 +22,9 @@ echo -ne "
 \t24) 2 Vertical & 4 Horizontal Panes
 \t32) 3 Vertical & 2 Horizontal Panes
 \t33) 3 Vertical & 3 Horizontal Panes
+\t34) 3 Vertical & 4 Horizontal Panes
+\t43) 4 Vertical & 3 Horizontal Panes
+\t44) 4 Vertical & 4 Horizontal Panes
 \t q) Quit
 \t########################################
 \tEnter Option: "
@@ -121,6 +124,58 @@ case "$a" in
             tmux split-window -v -t $SESSION:0.1 -p 50
             tmux split-window -v -t $SESSION:0.2 -p 33
             tmux split-window -v -t $SESSION:0.2 -p 50
+            tmux attach-session -t $SESSION
+        ;;
+        
+        34) SESSION="3Ver_4Hor"
+            tmux new-session -d -s $SESSION
+            tmux split-window -h -t $SESSION:0.0 -p 50
+            tmux split-window -h -t $SESSION:0.0 -p 50
+            tmux split-window -h -t $SESSION:0.1 -p 50
+            tmux split-window -v -t $SESSION:0.0 -p 33
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.1 -p 33
+            tmux split-window -v -t $SESSION:0.1 -p 50
+            tmux split-window -v -t $SESSION:0.2 -p 33
+            tmux split-window -v -t $SESSION:0.2 -p 50
+            tmux split-window -v -t $SESSION:0.3 -p 33
+            tmux split-window -v -t $SESSION:0.3 -p 50
+            tmux attach-session -t $SESSION
+        ;;
+        
+        43) SESSION="4Ver_3Hor"
+            tmux new-session -d -s $SESSION
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.1 -p 50
+            tmux split-window -h -t $SESSION:0.0 -p 33
+            tmux split-window -h -t $SESSION:0.1 -p 33
+            tmux split-window -h -t $SESSION:0.2 -p 33
+            tmux split-window -h -t $SESSION:0.3 -p 33
+            tmux split-window -h -t $SESSION:0.0 -p 50
+            tmux split-window -h -t $SESSION:0.1 -p 50
+            tmux split-window -h -t $SESSION:0.2 -p 50
+            tmux split-window -h -t $SESSION:0.3 -p 50
+            tmux attach-session -t $SESSION
+        ;;
+        
+        44) SESSION="4Ver_4Hor"
+            tmux new-session -d -s $SESSION
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux split-window -v -t $SESSION:0.1 -p 50
+            tmux split-window -h -t $SESSION:0.0 -p 50
+            tmux split-window -h -t $SESSION:0.1 -p 50
+            tmux split-window -h -t $SESSION:0.2 -p 50
+            tmux split-window -h -t $SESSION:0.3 -p 50
+            tmux split-window -h -t $SESSION:0.0 -p 50
+            tmux split-window -h -t $SESSION:0.1 -p 50
+            tmux split-window -h -t $SESSION:0.2 -p 50
+            tmux split-window -h -t $SESSION:0.3 -p 50
+            tmux split-window -h -t $SESSION:0.4 -p 50
+            tmux split-window -h -t $SESSION:0.5 -p 50
+            tmux split-window -h -t $SESSION:0.6 -p 50
+            tmux split-window -h -t $SESSION:0.7 -p 50
             tmux attach-session -t $SESSION
         ;;
         

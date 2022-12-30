@@ -25,7 +25,7 @@ echo -ne "
 case "$a" in
         02) SESSION="2_Horizontal"
             tmux new-session -d -s $SESSION
-            tmux split-window -h -t $SESSION:0.0
+            tmux split-window -h -t $SESSION:0.0 -p 50
             tmux attach-session -t $SESSION
         ;;
         
@@ -46,7 +46,7 @@ case "$a" in
         
         20) SESSION="2_Vertical"
             tmux new-session -d -s $SESSION
-            tmux split-window -v -t $SESSION:0.0
+            tmux split-window -v -t $SESSION:0.0 -p 50
             tmux attach-session -t $SESSION
         ;;
         
@@ -75,7 +75,7 @@ case "$a" in
         
         23) SESSION="3Hor_2Ver"
             tmux new-session -d -s $SESSION
-            tmux split-window -h -t $SESSION:0.0
+            tmux split-window -h -t $SESSION:0.0 -p 50
             tmux split-window -v -t $SESSION:0.0 -p 33
             tmux split-window -v -t $SESSION:0.1 -p 33
             tmux split-window -v -t $SESSION:0.0 -p 50

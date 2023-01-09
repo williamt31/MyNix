@@ -18,7 +18,7 @@
         "_comment": "V-251557",
         "InstallAddonsPermission": {
             "Default": false
-        };
+        },
         "_comment": "V-251558",
         "DisableTelemetry": true,
         "_comment": "V-251559",
@@ -34,7 +34,7 @@
             "Autoplay": {
                 "Default": "block-audio-video"
             }
-        ,}
+        },
         "_comment": "V-251566",
         "NetworkPrediction": false,
         "_comment": "V-251567",

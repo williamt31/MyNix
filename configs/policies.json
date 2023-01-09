@@ -1,0 +1,123 @@
+{
+    "policies": {
+        "_comment": "V-251546",
+        "SSLVersionMin": "tls1.2",
+        "_comment": "V-251549",
+        "ExtensionUpdate": false,
+        "_comment": "V-251551",
+        "DisableFormHistory": true,
+        "_comment": "V-251552",
+        "PasswordManagerEnabled": false,
+        "_comment": "V-251553",
+        "PopupBlocking": {
+            "Allow": ["http://example.mil/",
+                      "http://example.gov."],
+            "Default": true,
+            "Locked": true
+        },
+        "_comment": "V-251557",
+        "InstallAddonsPermission": {
+            "Default": false
+        };
+        "_comment": "V-251558",
+        "DisableTelemetry": true,
+        "_comment": "V-251559",
+        "DisableDeveloperTools": true,
+        "_comment": "V-251562",
+        "DisableForgetButton": true,
+        "_comment": "V-251563",
+        "DisablePrivateBrowsing": true,
+        "_comment": "V-251564",
+        "SearchSuggestEnabled": false,
+        "_comment": "V-251565",
+        "Permissions": {
+            "Autoplay": {
+                "Default": "block-audio-video"
+            }
+        ,}
+        "_comment": "V-251566",
+        "NetworkPrediction": false,
+        "_comment": "V-251567",
+        "EnableTrackingProtection": {
+            "Fingerprinting": true,
+            "_comment": "V-"251568,
+            "Cryptomining": true
+        },
+        "_comment": "V-251571",
+        "DisabledCiphers": {
+            "TLS_RSA_WITH_3DES_EDE_CBC_SHA": true
+        },
+        "_comment": "V-251572",
+        "UserMessaging": {
+            "ExtensionRecommendations": false
+        },
+        "_comment": "V-251573",
+        "FirefoxHome": {
+            "Search": false,
+            "TopSites": false,
+            "SponsoredTopSites": false,
+            "Pocket": false,
+            "SponsoredPocket": false,
+            "Highlights": false,
+            "Snippets": false,
+            "locked": true
+        },
+        "_comment": "V-251577",
+        "DNSOverHTTPS": {
+            "Enabled": false
+        },
+        "_comment": "V-251578",
+        "DisableFirefoxAccounts": true,
+        "_comment": "V-251580",
+        "DisableFeedbackCommands": true,
+        "_comment": "V-251581",
+        "EncryptedMediaExtensions": {
+            "Enabled": false,
+            "Locked": true
+        },
+        "_comment": "V-252581",
+        "SanitizeOnShutdown": {
+            "Cache": false,
+            "Cookies": false,
+            "Downloads": false,
+            "FormData": false,
+            "History": false,
+            "Sessions": false,
+            "SiteSettings": false,
+            "OfflineApps": false,
+            "Locked": true
+        },
+        "Preferences": {
+            "_comment": "V-251547",
+            "security.default_personal_cert": {
+                "Value": "Ask Every Time",
+                "Status": "locked"
+            },
+            "_comment": "V-251548",
+            "browser.search.update": {
+                "Value": false,
+                "Status": "locked"
+            },
+            "_comment": "V-251554",
+            "dom.disable_window_move_resize": {
+                "Value": true,
+                "Status": "locked"
+            },
+            "_comment": "V-251555",
+            "dom.disable_window_flip": {
+                "Value": true,
+                "Status": "locked"
+            },
+            "_comment": "V-251569",
+            "browser.contentblocking.category": {
+                "Value": "strict",
+                "Status": "locked"
+            },
+            "_comment": "V-251570",
+            "extensions.htmlaboutaddons.recommendations.enabled": {
+                "Value": false,
+                "Status": "locked"
+            }
+        }
+    }
+}

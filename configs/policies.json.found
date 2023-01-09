@@ -1,0 +1,73 @@
+{
+  "policies": {
+    "AppAutoUpdate": false,
+    "CaptivePortal": false,
+    "DisableAppUpdate": true,
+    "DisableSystemAddonUpdate": true,
+    "DisableTelemetry": true,
+    "DisableFirefoxAccounts": true,
+    "DisableFirefoxStudies": true,
+    "DisablePocket": true,
+    "DisableFeedbackCommands": true,
+    "EnableTrackingProtection": {
+      "Value": true,
+      "Locked": false,
+      "Cryptomining": true,
+      "Fingerprinting": true,
+      "Exceptions": [""]
+    },
+    "FirefoxHome": {
+      "Search": true,
+      "TopSites": true,
+      "Highlights": false,
+      "Pocket": false,
+      "Snippets": false,
+      "Locked": false
+    },
+    "Permissions": {
+      "Camera": {
+        "BlockNewRequests": true,
+        "Locked": false
+      },
+      "Microphone": {
+        "BlockNewRequests": true,
+        "Locked": false
+      },
+      "Location": {
+        "BlockNewRequests": true,
+        "Locked": false
+      },
+      "Notifications": {
+        "BlockNewRequests": true,
+        "Locked": false
+      },
+      "Autoplay": {
+        "Default": "block-audio-video",
+        "Locked": false
+      },
+      "VirtualReality": {
+        "BlockNewRequests": true,
+        "Locked": false
+      }
+    },
+    "Preferences": {
+      "accessibility.force_disabled": 1,
+      "browser.newtabpage.activity-stream.feeds.telemetry": false,
+      "browser.search.region": "US",
+      "browser.search.suggest.enabled": false,
+      "browser.shell.checkDefaultBrowser": false,
+      "browser.urlbar.suggest.topsites": false,
+      "datareporting.policy.dataSubmissionEnabled": false,
+      "dom.push.enabled": false,
+      "dom.push.connection.enabled": false,
+      "extensions.formautofill.addresses.enabled": false,
+      "extensions.htmlaboutaddons.recommendations.enabled": false,
+      "extensions.ui.locale.hidden": false,
+      "geo.enabled": false,
+      "geo.provider.ms-windows-location": false,
+      "layout.spellcheckDefault": 0,
+      "signon.autofillForms": false,
+      "signon.management.page.breach-alerts.enabled": false
+    }
+  }
+}

@@ -15,6 +15,7 @@ echo -ne "
 \t03) 3 Horizontal Panes
 \t04) 4 Horizontal Panes
 \t20) 2 Vertical Panes
+\t203 2 Vertical Panes 1/3 split
 \t30) 3 Vertical Panes
 \t40) 4 Vertical Panes
 \t22) 2 Vertical & 2 Horizontal Panes
@@ -58,10 +59,26 @@ case "$a" in
             tmux attach-session -t $SESSION
         ;;
         
+        20) SESSION="2_Vertical_33"
+            tmux new-session -d -s $SESSION
+            tmux split-window -v -t $SESSION:0.0 -p 67
+            tmux attach-session -t $SESSION
+        ;;
+        
         30) SESSION="3_Vertical"
             tmux new-session -d -s $SESSION
             tmux split-window -v -t $SESSION:0.0 -p 33
             tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux attach-session -t $SESSION
+        ;;
+        
+        30) SESSION="3_Vertical_logs"
+            tmux new-session -d -s $SESSION
+            tmux send-keys 'echo ONE'
+            tmux split-window -v -t $SESSION:0.0 -p 33
+            tmux send-keys 'echo THREE'
+            tmux split-window -v -t $SESSION:0.0 -p 50
+            tmux send-keys 'echo TWO'
             tmux attach-session -t $SESSION
         ;;
         

@@ -29,7 +29,7 @@ echo -ne "
 \t q) Quit
 \t########################################
 \tEnter Option: "
-        read a
+        read a 
 
 case "$a" in
         02) SESSION="2_Horizontal"

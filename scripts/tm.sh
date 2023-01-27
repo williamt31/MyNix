@@ -1,7 +1,13 @@
 #!/bin/bash
 # Created by: williamt31
 # Created on: 20221216
-# Version: 1.2
+# Version: 1.3
+
+# If not executed as root/sudo will prompt and restart script.
+if [[ $EUID -ne ]]
+then
+    exec sudo /bin/bash "$0" "$@"
+fi
 
 if [[ ! -f ~/.tmux.conf ]]; then
     ln -s "<network share>" ~/.tmux.conf

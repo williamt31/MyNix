@@ -15,8 +15,9 @@ fi
 IMPHOST=$(hostname -s)
 SCANDATE=$(date +%Y%m)
 SCANPATH="<Location to upload results to network share>"
+ANSWERFILES="<Path to Answer Files>"
+EXECARGS="--ScanType 'UnClassified' --ApplyTattoo --AnswerKey $ANSWERFILES"
 EXECPATH="<Set network path to 'Evaluate-STIG' files here>"
-EXECARGS="--ScanType 'UnClassified' --ApplyTattoo --AnswerKey"
 ############################## Begin Functions ##############################
 # Function to create a montly folder for scan results.
 createScanPath(){
@@ -42,6 +43,31 @@ uploadScanResults(){
         echo "Scan did not complete successfully, investigate"
         exit 1
     fi
+}
+# Menu to set what to scan
+PS3="Select Operation: "
+menu(){
+echo "
+#######################
+# Select What to Scan #
+#######################"
+select opt in "CentOS 7" "Firefox" "Both" "Quit"
+do
+    case $opt in
+        "CentOS 7") selectSTIG="CentOS7"
+        ;;
+
+        "Firefox") selectSTIG="Firefox"
+        ;;
+
+        "Both") selectSTIG="Firefox,CentOS7"
+        ;;
+
+        "Quit") exit
+        ;;
+
+    esac
+done
 }
 ############################## Begin Main Oper ##############################
 createScanPath

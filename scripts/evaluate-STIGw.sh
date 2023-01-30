@@ -70,6 +70,7 @@ do
 done
 }
 ############################## Begin Main Oper ##############################
+menu
 createScanPath
 execEvaluateSTIG
 uploadScanResults

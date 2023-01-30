@@ -55,12 +55,15 @@ select opt in "CentOS 7" "Firefox" "Both" "Quit"
 do
     case $opt in
         "CentOS 7") selectSTIG="CentOS7"
+        break
         ;;
 
         "Firefox") selectSTIG="Firefox"
+        break
         ;;
 
         "Both") selectSTIG="Firefox,CentOS7"
+        break
         ;;
 
         "Quit") exit

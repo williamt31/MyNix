@@ -16,7 +16,7 @@ IMPHOST=$(hostname -s)
 SCANDATE=$(date +%Y%m)
 SCANPATH="<Location to upload results to network share>"
 ANSWERFILES="<Path to Answer Files>"
-EXECARGS="--ScanType 'UnClassified' --ApplyTattoo --AnswerKey $ANSWERFILES"
+EXECARGS="--ScanType 'Unclassified' --ApplyTattoo --AnswerKey $ANSWERFILES"
 EXECPATH="<Set network path to 'Evaluate-STIG' files here>"
 ############################## Begin Functions ##############################
 # Function to create a montly folder for scan results.

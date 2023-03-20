@@ -4,10 +4,11 @@
 # Version: 1.3
 
 # If not executed as root/sudo will prompt and restart script.
-if [[ $EUID -ne ]]
-then
-    exec sudo /bin/bash "$0" "$@"
-fi
+# Uncommend next 4 lines if you want to always run script elevated. #
+#if [[ $EUID -ne ]]
+#then
+#    exec sudo /bin/bash "$0" "$@"
+#fi
 
 if [[ ! -f ~/.tmux.conf ]]; then
     ln -s "<network share>" ~/.tmux.conf
@@ -78,13 +79,13 @@ case "$a" in
             tmux attach-session -t $SESSION
         ;;
         
-        30) SESSION="3_Vertical_logs"
+        3.) SESSION="3_Vertical_logs"
             tmux new-session -d -s $SESSION
-            tmux send-keys 'echo ONE'
+            tmux send-keys "tail -f /var/log/audit/audit.log" C-m # 1st
             tmux split-window -v -t $SESSION:0.0 -p 33
-            tmux send-keys 'echo THREE'
+            tmux send-keys "tail -f /var/log/secure" C-m # 3rd
             tmux split-window -v -t $SESSION:0.0 -p 50
-            tmux send-keys 'echo TWO'
+            tmux send-keys "tail -f /var/log/message" C-m # 2nd
             tmux attach-session -t $SESSION
         ;;
         

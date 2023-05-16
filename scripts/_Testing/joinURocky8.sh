@@ -1,7 +1,7 @@
 # UNCLASSIFIED #
 ####################################################################################################
 #!/usr/bin/env bash
-# Created by: William Thompson
+# Created by: williamt31
 # Created on: 20230426
 # Version: 1
 # Purpose: Bring a newly imaged system to configured, STIGed, and IDM joined.

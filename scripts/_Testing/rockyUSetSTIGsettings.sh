@@ -1,7 +1,7 @@
 # UNCLASSIFIED #
 ####################################################################################################
 #!/usr/bin/env bash
-# Created by: William Thompson
+# Created by: williamt31
 # Created on: 20230420
 # Version: V1R9.1
 # Purpose: To Set as many DOD STIG settings as possible without breaking usabilty on Rocky Linux 8

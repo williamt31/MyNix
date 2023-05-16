@@ -1,8 +1,8 @@
 # U #
 #!/bin/bash
-# Created By: William Thompson
+# Created By: williamt31
 # Created On: 20230307
-# Updated By: William Thompson
+# Updated By: williamt31
 # Updated On: 20230411
 # Version:    1.2
 

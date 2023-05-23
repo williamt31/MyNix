@@ -87,6 +87,10 @@
             "OfflineApps": false,
             "Locked": true
         },
+        "_comment": "V-252908",
+        "DisablePocket": true,
+        "_comment": "V-252909",
+        "DisableFirefoxStudies": true,
         "Preferences": {
             "_comment": "V-251547",
             "security.default_personal_cert": {

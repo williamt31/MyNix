@@ -42,3 +42,6 @@ then
 else
     echo -e "\nERROR, Unable to move: $ISO_FILE to $NAS\n"
 fi
+
+# Optional, scp .iso directly to ESXi datastore
+#scp $STORE/$ISO_FILE e1:/vmfs/volumes/<datastore_name>/_iso-Tools/

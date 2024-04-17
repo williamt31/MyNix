@@ -1,0 +1,187 @@
+#cloud-config
+version: 1
+autoinstall:
+  version: 1
+  refresh-installer:
+    update: true
+
+  # localization settings
+  locale: en_US.UTF-8
+  timezone: America/Chicago
+  keyboard:
+    layout: us
+
+  # storage layout
+  storage:
+    config:
+    ## general disk setup
+    - id: disk-sda
+      path: /dev/sda
+      type: disk
+      ptable: gpt
+      wipe: superblock-recursive
+      preserve: false
+      grub_device: false
+
+    ## unencrypted /boot partition for the kernel
+    - id: boot
+      device: disk-sda
+      size: 1024MB
+      wipe: superblock
+      flag: ''
+      preserve: false
+      type: partition
+    - id: boot-format
+      fstype: ext4
+      volume: boot
+      preserve: false
+      type: format
+      label: BOOT
+    - id: boot-mount
+      device: boot-format
+      path: /boot
+      type: mount
+
+    ## unencrypted /boot/efi partition for EFI boot environment
+    - id: esp
+      type: partition
+      device: disk-sda
+      grub_device: true
+      size: 512MB
+      flag: boot
+    - id: esp-format
+      type: format
+      volume: esp
+      fstype: fat32
+      preserve: false
+    - id: esp-mount
+      type: mount
+      device: esp-format
+      path: /boot/efi
+
+    ## LUKS encrypted partition holding the LVM
+    - device: disk-sda
+      size: -1
+      wipe: superblock
+      flag: ''
+      preserve: false
+      type: partition
+      id: sda-crypt-partition
+    - volume: sda-crypt-partition
+      key: "signals"
+      preserve: false
+      type: dm_crypt
+      id: root_crypt
+      dm_name: root_crypt
+
+    ## LVM volumegroup vg0 holding the machines partitions
+    - name: vg0
+      devices: [root_crypt]
+      preserve: false
+      type: lvm_volgroup
+      id: vg0
+
+    ## /var logical partition
+    - name: audit
+      volgroup: vg0
+      size: 20GB
+      preserve: false
+      type: lvm_partition
+      id: audit-partition
+    - fstype: ext4
+      volume: audit-partition
+      preserve: false
+      type: format
+      id: audit-format
+    - device: audit-format
+      path: /var/log/audit
+      type: mount
+      id: audit-mount
+      
+    ## /root logical partition
+    - name: root
+      volgroup: vg0
+      size: -1
+      preserve: false
+      type: lvm_partition
+      id: root-partition
+    - fstype: ext4
+      volume: root-partition
+      preserve: false
+      type: format
+      id: root-format
+    - device: root-format
+      path: /
+      type: mount
+      id: root-mount
+  
+  # user management
+  identity:
+    hostname: changeme
+    # Use 'openssl passwd -6' to generate a sha512 pw hash
+    password: 
+    username: frodo
+    realname: 'frodo baggins'
+
+  ssh:
+    install-server: yes
+    allow-pw: yes
+    # authorized-keys:
+    #   - <add-your-ssh-key-and-refresh-the-seed.iso-file>
+
+  # software configuration
+  apt:
+    preserve_sources_list: false
+    sources_list: |
+      deb $MIRROR $RELEASE main restricted
+      deb $MIRROR $RELEASE-updates main restricted
+      deb $MIRROR $RELEASE universe
+      deb $MIRROR $RELEASE-updates universe
+      deb $MIRROR $RELEASE multiverse
+      deb $MIRROR $RELEASE-updates multiverse
+      deb $MIRROR $RELEASE-backports main restricted universe multiverse
+      deb $SECURITY $RELEASE-security main restricted
+      deb $SECURITY $RELEASE-security universe
+      deb $SECURITY $RELEASE-security multiverse
+  updates: 'all'
+ 
+  packages:
+    - ubuntu-desktop
+
+  snaps:
+    - name: brave
+  
+  late-commands:
+    - |
+      cat <<'EOF' | tee -a /get_userdetails.sh
+      #Change to tty3 to display the dialog
+      if ! chvt 3 &>/dev/null; then
+        break
+      fi
+
+      export TERM=linux
+      export NCURSES_NO_UTF8_ACS=1
+      printf "\ec"
+
+      # Hostname dialog
+      default_hostname="changeme"
+      custom_hostname=$(whiptail --inputbox "Please enter a Hostname:\n\nDefault: [$default_hostname]" 9 30 --clear --nocancel --ok-button "Enter" 3>&1 1>&2 2>&3)
+
+      if ! [[ -z $custom_hostname ]]; then
+        sed -i "s/changeme/$custom_hostname/g" /target/etc/hostname
+        sed -i "s/changeme/$custom_hostname/g" /target/etc/hosts
+      fi
+      #Change back to tty1
+      if ! chvt 1 &>/dev/null; then
+        break
+      fi
+      EOF
+
+    - sudo bash /get_userdetails.sh <> /dev/tty3 >&0 2>&1
+
+    - >-
+      curtin in-target -- apt remove -y
+      ubuntu-server gnome-initial-setup
+
+    - >- # Need this for each command.
+      curtin in-target -- apt autoremove -y

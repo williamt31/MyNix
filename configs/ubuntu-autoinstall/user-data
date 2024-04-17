@@ -68,7 +68,7 @@ autoinstall:
       type: partition
       id: sda-crypt-partition
     - volume: sda-crypt-partition
-      key: "signals"
+      key: "bobs your uncle" # Set LUKS passphrase here.
       preserve: false
       type: dm_crypt
       id: root_crypt

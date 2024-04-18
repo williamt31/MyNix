@@ -1,8 +1,12 @@
-Extract the Ubuntu LTS Server ISO to ```<dir>```
-<br>```mkdir -p <dir>/source-files/server```
+Create ```<dir>``` to start in.
+<br>Create ```mkdir -p <dir>/source-files/server```
 <br>```touch <dir>/source-files/server/meta-data```
+<br>Extract the Ubuntu LTS Server ISO ```7z -y x <source>/live-server-amd64.iso -osource-files```
+<br>```source-files/\[BOOT\]/ ./BOOT```
+<br>
 <br>copy ```user-data``` file in repo to ```<dir>/source-files/server/user-data```
-<br><br>From ```<dir>/source-files``` run the following.
+<br>
+<br>From ```<dir>/source-files``` run the following.
 <br>```xorriso -as mkisofs -r \```
 <br>```-V 'Ubuntu 22.04 LTS AUTO (EFIBIOS)' \```
 <br>```-o ../ubuntu-22.04.4-Server-autoinstall.iso \```

@@ -4,6 +4,13 @@ Create ```<dir>``` to start in.
 <br>Extract the Ubuntu LTS Server ISO ```7z -y x <source>/live-server-amd64.iso -osource-files```
 <br>```source-files/\[BOOT\]/ ./BOOT```
 <br>
+<br>Add the following to ```<dir>/source-files/boot/grub/grub.cfg```
+<br>```menuentry "Autoinstall Ubuntu Workstation" {```
+<br>```    set gfxpayload=keep```
+<br>```    linux   /casper/vmlinuz quiet autoinstall ds=nocloud\;s=/cdrom/server/  ---```
+<br>```    initrd  /casper/initrd```
+<br>```}```
+<br>
 <br>copy ```user-data``` file in repo to ```<dir>/source-files/server/user-data```
 <br>
 <br>From ```<dir>/source-files``` run the following.
@@ -24,9 +31,3 @@ Create ```<dir>``` to start in.
 <br>```-eltorito-alt-boot \```
 <br>```-e '--interval:appended_partition_2:::' \```
 <br>```-no-emul-boot   .```
-<br><br>Add the following to ```<dir>/source-files/boot/grub/grub.cfg```
-<br>```menuentry "Autoinstall Ubuntu Workstation" {```
-<br>```    set gfxpayload=keep```
-<br>```    linux   /casper/vmlinuz quiet autoinstall ds=nocloud\;s=/cdrom/server/  ---```
-<br>```    initrd  /casper/initrd```
-<br>```}```

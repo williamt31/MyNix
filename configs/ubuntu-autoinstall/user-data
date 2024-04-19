@@ -150,6 +150,8 @@ autoinstall:
 
   snaps:
     - name: brave
+    - name: code
+    - name: powershell
   
   late-commands:
     - |
@@ -179,9 +181,16 @@ autoinstall:
 
     - sudo bash /get_userdetails.sh <> /dev/tty3 >&0 2>&1
 
+    - >- # Need this for each command.
+      curtin in-target -- apt update
+
+    - >-
+      curtin in-target -- apt install -y
+      ubunto-pro-client ubuntu-pro-client-l10n
+
     - >-
       curtin in-target -- apt remove -y
       ubuntu-server gnome-initial-setup
 
-    - >- # Need this for each command.
+    - >-
       curtin in-target -- apt autoremove -y

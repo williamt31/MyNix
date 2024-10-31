@@ -18,8 +18,8 @@ then
 fi
 
 # Copy updated config files into working files
-\cp CONFIG_FILES/ks*.cfg  $SOURCE_FILES/
-\cp CONFIG_FILES/grub.cfg $SOURCE_FILES/EFI/BOOT/
+\cp $CONFIG_FILES/ks*.cfg  $SOURCE_FILES/
+\cp $CONFIG_FILES/grub.cfg $SOURCE_FILES/EFI/BOOT/
 
 # UEFI ISO Build
 xorriso -as mkisofs \

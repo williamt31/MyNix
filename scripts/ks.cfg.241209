@@ -1,0 +1,236 @@
+############################################################
+# Created: 11/01/2024                                      #
+# Version: 1.99                                            #
+#                                                          #
+############################################################
+# TODO: KS Cleanup, Reduce image size                      #
+############################################################
+# version=RHEL9                                            #
+# shellcheck disable=SC1009,SC1132,SC2006,SC2016,SC2022,SC2034,SC2043,SC2062
+# shellcheck disable=SC2094,SC2086,SC2148,SC2154,SC2211,SC2215,SC2269,SC2283
+############################################################
+##### Gather Information
+%pre --log=/tmp/ks.log
+iotty=`tty`
+exec < $iotty > $iotty 2> $iotty
+
+echo -e "\n\n\tWelcome to My Interactive Installer."
+#WIT# Begin Interactive Portion #WIT#
+#WIT# Information Gathering #WIT#
+printf -- '-%.0s' {1..80}
+echo -e "\n"
+read -rep "Enter Hostname (DEV-RL9-01)        : " HOSTNAME
+declare -l HOSTNAME
+HOSTNAME="$HOSTNAME"
+HOSTNAME="${HOSTNAME:=dev-rl9-01}"
+#WIT# Network build file exported to /tmp/network.ks #WIT#
+echo "network --bootproto=dhcp --hostname=$HOSTNAME.blah.internal --onboot=on --activate" > /tmp/network.ks
+
+#WIT# Sets differing packages #WIT#
+echo -e "\nYou will now be prompted to select OS Install type and HDD base size.\n"
+echo -e "OS Install type Graphical (Gnome) or Headless (Non-gui)"
+while [[ -z "$INSTALL_TYPE" ]] || [[ "$INSTALL_TYPE" != @(G|g|H|h) ]]
+do
+  read -rep "(H)eadless or (G)ui install?       : " INSTALL_TYPE
+done
+declare -l INSTALL_TYPE
+INSTALL_TYPE="$INSTALL_TYPE"
+if [[ "$INSTALL_TYPE" == "g" ]]
+then
+  cat >/tmp/packages.ks <<EOF
+@^Server with GUI
+EOF
+graphical
+
+elif [[ "$INSTALL_TYPE" == "h" ]]
+then
+  cat >/tmp/packages.ks <<EOF
+@^minimal-environment
+@standard
+EOF
+text
+fi
+
+echo -e "HDD Footprint Choices*"
+printf  " %-10s : %-10s\n" "Small" "75GB"
+printf  " %-10s : %-10s\n" "Medium" "125GB"
+printf  " %-10s : %-10s\n" "Large" "250GB"
+echo -e "*Note the /home partition will expand to fill the available space."
+printf -- '-%.0s' {1..80}; echo ""
+
+while [[ -z "$HDD_Size" ]] || [[ "$HDD_Size" != @(S|s|M|m|L|l) ]]
+do
+  read -rep "(S)mall 75GB, (M)edium) or (L)arge : " HDD_Size
+done
+declare -l HDD_Size
+HDD_Size="$HDD_Size"
+
+while [[ -z "$LUKS" ]] || [[ "$LUKS" != @(Y|y|N|n) ]]
+do
+  read -rep "Do you want to LUKS encrypt the LVM? : " LUKS
+done
+declare -l LUKS
+LUKS="$LUKS"
+if [ "$LUKS" == "y" ]
+then
+    LVM="part pv.42 --cipher=aes-cbc-essiv:sha256 --size=71680 --grow --encrypted --passphrase=<pick your own!>"
+else
+    LVM="part pv.42 --cipher=aes-cbc-essiv:sha256 --size=71680 --grow"
+fi
+# Auto select install disk
+if [[ -d /sys/block/nvme0n1 ]]
+then
+    BOOTDRIVE="/dev/nvme0n1"
+elif [[ -d /sys/block/sda ]]
+then
+    BOOTDRIVE="/dev/sda"
+fi
+
+# Partition clearing information
+cat >/tmp/rootdrive.ks <<EOF
+bootloader --append=" crashkernel=auto FIPS=0" --location=mbr
+zerombr
+clearpart --all --initlabel --drive=$BOOTDRIVE
+ignoredisk --only-use=$BOOTDRIVE
+part /boot/efi  --fstype="efi" --ondisk=$BOOTDRIVE --size=1024 --fsoptions="umask=0077,shortname=winnt"
+part /boot      --fstype="xfs" --ondisk=$BOOTDRIVE --size=1024
+$LVM
+volgroup VG0 --pesize=4096 pv.42
+EOF
+
+if [[ "$HDD_Size" == "s" ]]
+then
+    cat >>/tmp/rootdrive.ks <<EOF
+logvol swap             --vgname=VG0 --name=LogVol0 --fstype=swap --size=8192
+logvol /                --vgname=VG0 --name=LogVol1 --fstype=xfs  --size=25600
+logvol /var             --vgname=VG0 --name=LogVol2 --fstype=xfs  --size=5120
+logvol /var/log         --vgname=VG0 --name=LogVol3 --fstype=xfs  --size=5120
+logvol /var/log/audit   --vgname=VG0 --name=LogVol4 --fstype=xfs  --size=5120
+logvol /var/tmp         --vgname=VG0 --name=LogVol5 --fstype=xfs  --size=5120
+logvol /tmp             --vgname=VG0 --name=LogVol6 --fstype=xfs  --size=10240
+logvol /home            --vgname=VG0 --name=LogVol7 --fstype=xfs  --size=1 --grow
+EOF
+
+elif [[ "$HDD_Size" == "m" ]]
+then
+    cat >>/tmp/rootdrive.ks <<EOF
+logvol swap             --vgname=VG0 --name=LogVol0 --fstype=swap --size=12288
+logvol /                --vgname=VG0 --name=LogVol1 --fstype=xfs  --size=51200
+logvol /var             --vgname=VG0 --name=LogVol2 --fstype=xfs  --size=10240
+logvol /var/log         --vgname=VG0 --name=LogVol3 --fstype=xfs  --size=10240
+logvol /var/log/audit   --vgname=VG0 --name=LogVol4 --fstype=xfs  --size=10240
+logvol /var/tmp         --vgname=VG0 --name=LogVol5 --fstype=xfs  --size=5120
+logvol /tmp             --vgname=VG0 --name=LogVol6 --fstype=xfs  --size=20480
+logvol /home            --vgname=VG0 --name=LogVol7 --fstype=xfs  --size=1 --grow
+EOF
+elif [[ "$HDD_Size" == "l" ]]
+then
+    cat >>/tmp/rootdrive.ks <<EOF
+logvol swap             --vgname=VG0 --name=LogVol0 --fstype=swap --size=16384
+logvol /                --vgname=VG0 --name=LogVol1 --fstype=xfs  --size=76800
+logvol /var             --vgname=VG0 --name=LogVol2 --fstype=xfs  --size=20480
+logvol /var/log         --vgname=VG0 --name=LogVol3 --fstype=xfs  --size=10240
+logvol /var/log/audit   --vgname=VG0 --name=LogVol4 --fstype=xfs  --size=10240
+logvol /var/tmp         --vgname=VG0 --name=LogVol5 --fstype=xfs  --size=5120
+logvol /tmp             --vgname=VG0 --name=LogVol6 --fstype=xfs  --size=20480
+logvol /home            --vgname=VG0 --name=LogVol7 --fstype=xfs  --size=1 --grow
+EOF
+fi
+
+printf -- '-%.0s' {1..80}; echo ""
+%end
+
+##### Begin Kickstart 
+url  --mirrorlist https://mirrors.rockylinux.org/mirrorlist?arch=x86_64&repo=rocky-BaseOS-$releasever
+repo --name="AppStream" --baseurl=https://download.rockylinux.org/pub/rocky/$releasever/AppStream/x86_64/os
+
+# System authorization information
+#auto --enableshadow --passalgo=sha512
+authselect --enableshadow --passalgo=sha512
+
+# Use DVD Installation medium
+#cdrom
+
+# Install type (graphical/text)
+#text
+
+# Run the Setup agent on first boot
+firstboot --disable
+eula --agreed
+
+# Keyboard layouts
+keyboard --xlayouts='us'
+# System language
+lang en_US.UTF-8
+
+# Network information
+%include /tmp/network.ks
+
+# System services
+services --enabled="chronyd"
+
+# System timezone
+timezone Etc/GMT --utc
+
+# System bootloader configuration
+%include /tmp/rootdrive.ks
+
+reboot --eject
+
+rootpw --iscrypted --lock <generate new>
+user --name=<username> --groups=wheel --gecos="<username>" --iscrypted --password=<generate new>
+
+%addon com_redhat_kdump --disable --reserve-mb='auto'
+%end
+
+#%addon org_fedora_oscap
+%addon org_redhat_oscap
+    content-type = scap-security-guide
+    datastream-id = scap_org.open-scap_datastream_from_xccdf_ssg-rhel9-xccdf.xml
+    xccdf-id = scap_org.open-scap_cref_ssg-rhel9-xccdf.xml
+    profile = xccdf_org.ssgproject.content_profile_stig
+%end
+
+%post
+##### Fixes for oscap issues and usability #####
+dnf -y install nfs-utils
+chmod 600 /etc/sssd/sssd.conf
+sed -i '/*.* @@logcollector/s/^/#/' /etc/rsyslog.conf
+sed -i '/$/s/^/#/' /etc/rsyslog.d/encrypt.conf
+mv /etc/profile.d/tmux.sh /etc/profile.d/tmux.sh.bak
+systemctl disable fapolicyd
+systemctl enable cockpit.socket
+for acc in <username>
+do
+    /usr/sbin/usermod -p '<generate new>' $acc
+    chage -M 365 -m 1 $acc
+done
+##################################################
+%end
+
+#----- Install <username> SSH key -----
+%post
+mkdir /home/<username>/.ssh/
+
+cat <<EOF >/home/<username>/.ssh/authorized_keys
+ssh-rsa <pubkeyhere>
+EOF
+
+### set permissions ***WIT*** Verify permissions are correct!
+chmod 0600 /home/<username>/.ssh/authorized_keys
+chown -R <username>:<username> /home/<username>/.ssh
+
+### fix up selinux context
+restorecon -R /home/<username>/.ssh/
+%end
+
+%packages
+%include /tmp/packages.ks
+@headless-management
+@security-tools
+@smart-card
+@system-tools
+biosdevname
+git
+-gnome-tour
+%end
